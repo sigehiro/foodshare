@@ -7,32 +7,57 @@
   <title>Food Posting</title>
 </head>
 <body>
-  <div class="main">
-    <header th:include="@{/fragments/nav.html}"></header>
+<div class="main">
+  <header th:include="@{/fragments/nav.html}"></header>
 
-    <div class="content">
+  <div class="content">
+    <h1>Food Posting Form</h1>
+    <form action="/foodshare/save" method="post" th:object="${foodItem}">
+      <!-- Add input fields -->
+      <div>
+        <label for="foodType">Type of food</label>
+        <input type="text" id="foodType" th:field="*{foodType}" required>
+      </div>
 
-      <h1>Food Posting Form</h1>
-      <form action="/post-food" method="post">
-        <!-- Add input fields -->
-        <label for="foodType">Food Type:</label>
-        <input type="text" id="foodType" name="foodType" required><br>
+      <div>
+        <label for="quantity">Quantity</label>
+        <input type="number" id="quantity" th:field="*{quantity}" required>
+      </div>
 
-        <label for="quantity">Quantity:</label>
-        <input type="number" id="quantity" name="quantity" required><br>
+      <div>
+        <label for="allergenInfo">Allergen Information</label>
+        <input type="text" id="allergenInfo" th:field="*{allergenInfo}">
+      </div>
 
-        <label for="allergenInfo">Allergen Information:</label>
-        <input type="text" id="allergenInfo" name="allergenInfo"><br>
+      <div>
+        <label for="pickupTime">Pickup Time</label>
+        <input type="text" id="pickupTime" th:field="*{pickupTime}">
+      </div>
 
-        <label for="pickupLocation">Pickup Time/Location:</label>
-        <input type="text" id="pickupLocation" name="pickupLocation"><br>
+      <div>
+        <label for="location">Location:</label>
+        <input type="text" id="location" th:field="*{location}">
+      </div>
 
-        <button type="submit">Post</button>
-      </form>
+<!--      #TODO add the following fields to the form-->
+<!--      <div>-->
+<!--        <label for="station">Selection from ali stop near by stations</label>-->
+<!--        <input type="text" id="station" th:field="*{station}">-->
+<!--      </div>-->
+
+<!--      <div>-->
+<!--        <label for="food-image">Image:</label>-->
+<!--        <input type="text" id="food-image" th:field="*{food-image}">-->
+<!--      </div>-->
+
+      <button type="submit">Post</button>
+    </form>
+
+    <!--     #TODO pagination -->
 
 
-    </div>
-    <footer th:include="@{fragments/footer.html}"></footer>
   </div>
+  <footer th:include="@{fragments/footer.html}"></footer>
+</div>
 </body>
 </html>
