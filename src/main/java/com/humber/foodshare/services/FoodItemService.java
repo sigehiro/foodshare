@@ -23,10 +23,6 @@ public class FoodItemService {
     public FoodItem save(FoodItem foodItem) {
         System.out.println("Saving food item: " + foodItem);
 
-//        if (foodItem.getType() == null || foodItem.getType().isEmpty()) {
-//            throw new IllegalArgumentException("Food type cannot be empty");
-//        }
-
         if (foodItem.getQuantity() <= 0) {
             throw new IllegalArgumentException("Quantity must be greater than 0");
         }
