@@ -4,49 +4,235 @@
   <meta charset="UTF-8">
   <link rel="stylesheet" th:href="@{/css/style.css}">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
-  <title>Food Listing</title>
+  <title>Available Food - FoodShare Connect</title>
+  <style>
+    :root {
+      --primary-green: #28a745;
+      --dark-green: #218838;
+      --light-gray: #f8f9fa;
+      --medium-gray: #e9ecef;
+      --dark-gray: #6c757d;
+    }
+
+    .listing-container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    .page-header {
+      color: var(--primary-green);
+      margin-bottom: 2rem;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .search-filter {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 12px;
+      margin-bottom: 2rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .food-card {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      margin-bottom: 1.5rem;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      height: 100%;
+    }
+
+    .food-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .food-image {
+      height: 180px;
+      background-color: var(--light-gray);
+      background-size: cover;
+      background-position: center;
+    }
+
+    .food-body {
+      padding: 1.5rem;
+    }
+
+    .food-title {
+      color: var(--primary-green);
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .food-meta {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.5rem;
+      color: var(--dark-gray);
+    }
+
+    .food-meta svg {
+      margin-right: 0.5rem;
+      width: 16px;
+      height: 16px;
+      fill: currentColor;
+    }
+
+    .badge-allergen {
+      background-color: #fff3cd;
+      color: #856404;
+      font-weight: 500;
+      margin-right: 0.5rem;
+    }
+
+    .want-btn {
+      background-color: var(--primary-green);
+      color: white;
+      border: none;
+      padding: 0.5rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 500;
+      transition: background-color 0.3s;
+      width: 100%;
+      margin-top: 1rem;
+    }
+
+    .want-btn:hover {
+      background-color: var(--dark-green);
+      color: white;
+    }
+
+    .empty-state {
+      padding: 3rem;
+      text-align: center;
+      color: var(--dark-gray);
+      background-color: var(--light-gray);
+      border-radius: 12px;
+    }
+
+    .pagination {
+      justify-content: center;
+      margin-top: 2rem;
+    }
+
+    .page-item.active .page-link {
+      background-color: var(--primary-green);
+      border-color: var(--primary-green);
+    }
+
+    .page-link {
+      color: var(--primary-green);
+    }
+  </style>
 </head>
 <body>
 <div class="main">
-  <header th:include="@{/fragments/nav.html}"></header>
+  <header th:replace="fragments/nav :: nav"></header>
 
-  <div class="content">
-    <h1>Food Listing</h1>
+  <div class="listing-container">
+    <h1 class="page-header">Available Food Listings</h1>
 
-    <table class="table">
-      <thead>
-        <tr>
-          <th>Type of Food</th>
-          <th>Quantity</th>
-          <th>Allergen Information</th>
-          <th>Pickup Time</th>
-          <th>Location</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr th:each="item : ${foodItems}">
-          <td th:text="${item.foodType}"></td>
-          <td th:text="${item.quantity}"></td>
-          <td th:text="${item.allergenInfo}"></td>
-          <td th:text="${item.pickupTime}"></td>
-          <td th:text="${item.location}"></td>
-          <td>
-            <!-- Want button -->
-            <form action="/foodshare/want-food" method="post" style="display:inline;">
+    <!-- Search and Filter Section -->
+    <div class="search-filter">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <input type="text" class="form-control" placeholder="Search by food type...">
+        </div>
+        <div class="col-md-3">
+          <select class="form-select">
+            <option selected>All Locations</option>
+            <option>Downtown</option>
+            <option>Northside</option>
+            <option>East End</option>
+          </select>
+        </div>
+        <div class="col-md-3">
+          <button class="btn btn-primary w-100" style="background-color: var(--primary-green); border: none;">
+            Apply Filters
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Food Listings Grid -->
+    <div th:if="${foodItems != null and !foodItems.empty}" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+      <div class="col" th:each="item : ${foodItems}">
+        <div class="food-card">
+          <div class="food-image" th:style="'background-image: url(' + ${item.imageUrl ?: '/images/food-placeholder.jpg'} + ')'"></div>
+          <div class="food-body">
+            <h3 class="food-title" th:text="${item.foodType}"></h3>
+
+            <div class="food-meta">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M18.06 22.99h1.66c.84 0 1.53-.64 1.63-1.46L23 5.05h-5V1h-1.97v4.05h-4.97l.3 2.34c1.71.47 3.31 1.32 4.27 2.26 1.44 1.42 2.43 2.89 2.43 5.29v8.05zM1 21.99V21h15.03v.99c0 .55-.45 1-1.01 1H2.01c-.56 0-1.01-.45-1.01-1zm15.03-7c0-8-15.03-8-15.03 0h15.03zM1.02 17h15v2h-15z"/>
+              </svg>
+              <span th:text="${item.quantity} + ' servings'"></span>
+            </div>
+
+            <div class="food-meta">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+              </svg>
+              <span th:text="${item.location}"></span>
+            </div>
+
+            <div class="food-meta">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/>
+              </svg>
+              <span th:text="${item.pickupTime}"></span>
+            </div>
+
+            <div th:if="${item.allergenInfo}" class="mt-2">
+              <span class="badge badge-allergen" th:text="${item.allergenInfo}"></span>
+            </div>
+
+            <form action="/foodshare/want-food" method="post">
               <input type="hidden" name="id" th:value="${item.id}" />
-              <button type="submit" class="btn btn-primary">Want</button>
+              <button type="submit" class="want-btn">I Want This</button>
             </form>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+          </div>
+        </div>
+      </div>
+    </div>
 
-<!--     #TODO pagination -->
+    <!-- Empty State -->
+    <div th:if="${foodItems == null or foodItems.empty}" class="empty-state">
+      <h3>No food listings available</h3>
+      <p>Check back later or post your own food donation</p>
+      <a th:href="@{/foodshare/food-posting}" class="btn btn-primary"
+         style="background-color: var(--primary-green); border: none;">
+        Post Food
+      </a>
+    </div>
 
+    <!-- Pagination -->
+    <nav th:if="${totalPages > 1}" aria-label="Page navigation">
+      <ul class="pagination">
+        <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
+          <a class="page-link" th:href="@{/foodshare/food-listing(page=${currentPage - 1})}" aria-label="Previous">
+            <span aria-hidden="true">&laquo;</span>
+          </a>
+        </li>
+        <li th:each="page : ${#numbers.sequence(1, totalPages)}"
+            class="page-item" th:classappend="${page == currentPage} ? 'active'">
+          <a class="page-link" th:href="@{/foodshare/food-listing(page=${page})}" th:text="${page}"></a>
+        </li>
+        <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled'">
+          <a class="page-link" th:href="@{/foodshare/food-listing(page=${currentPage + 1})}" aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
   </div>
 
-  <footer th:include="@{fragments/footer.html}"></footer>
+  <footer th:replace="fragments/footer :: footer"></footer>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
