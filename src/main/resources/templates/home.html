@@ -4,18 +4,128 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
-    <title>Home Page</title>
+    <title>FoodShare Connect</title>
+    <style>
+        .hero {
+            background-color: #f8f9fa;
+            background-image: linear-gradient(to bottom, rgba(255,255,255,0.9), rgba(248,249,250,0.9));
+            padding: 4rem 2rem;
+            border-radius: 0.5rem;
+            margin-bottom: 3rem;
+        }
+        .btn-primary {
+            background-color: #28a745;
+            border-color: #28a745;
+        }
+        .btn-outline-primary {
+            color: #28a745;
+            border-color: #28a745;
+        }
+        .btn-outline-primary:hover {
+            background-color: #28a745;
+            color: white;
+        }
+        .feature-card {
+            transition: transform 0.3s ease;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+    </style>
 </head>
 <body>
-    <div class="main">
-        <header th:include="@{/fragments/nav.html}"></header>
+<div class="main">
+    <header th:include="@{/fragments/nav.html}"></header>
 
-        <div class="content">
-            <h1>Home page</h1>
+    <div class="content container mt-4">
+        <!-- Hero Section -->
+        <section class="hero text-center mb-5">
+            <h1 class="display-4 fw-bold mb-4">Connect, Donate, and Reduce Food Waste</h1>
+            <p class="lead mb-4 mx-auto" style="max-width: 600px;">
+                FoodShare Connect bridges the gap between those with surplus food and local charities in need.
+                By facilitating quick and easy donations, we ensure that no food goes to waste while helping
+                those who require it most.
+            </p>
+            <div class="d-flex gap-3 justify-content-center">
+                <a href="#" class="btn btn-primary btn-lg px-4">Learn More</a>
+                <a href="#" class="btn btn-outline-primary btn-lg px-4">Sign Up</a>
+            </div>
+        </section>
 
 
+        <!-- How to Section -->
+        <section class="mb-5">
+            <h2 class="mb-3 text-center">How to Donate and Receive Food</h2>
+            <p class="lead text-center mb-4">FoodShare Connect makes donating and receiving food easy and efficient. Follow these simple steps to help reduce food waste and support your community.</p>
+
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-3">
+                    <div class="p-4 border rounded h-100 feature-card">
+                        <h3 class="h4">Step 1: Sign Up or Log in</h3>
+                        <p>Donate is prepared for high quality products.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="p-4 border rounded h-100 feature-card">
+                        <h3 class="h4">Step 2: Prepare Your Food Donation</h3>
+                        <p>How to deliver our food donation.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="p-4 border rounded h-100 feature-card">
+                        <h3 class="h4">Step 3: Review Available Food</h3>
+                        <p>Determine all food donations used by you.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="p-4 border rounded h-100 feature-card">
+                        <h3 class="h4">Step 4: Coordinate Delivery</h3>
+                        <p>Effortless food sharing process.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Highlight Section -->
+        <section class="mb-5 p-5 bg-primary text-white rounded">
+            <h2 class="mb-4 text-center">Effortless Food Donations: Connect and Coordinate Instantly with FoodShare Connect</h2>
+            <p class="text-center mb-0">FoodShare Connect revolutionises the way food donations are made. Our platform ensures that surplus food reaches those in need without delay.</p>
+        </section>
+
+
+        <!-- Features Section -->
+        <div class="row g-4 mb-5">
+            <div class="col-md-4">
+                <div class="p-4 border rounded h-100 feature-card">
+                    <h3>Secure Transactions for Peace of Mind</h3>
+                    <p>We prioritise your security with encrypted transactions.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="p-4 border rounded h-100 feature-card">
+                    <h3>Real-Time Notifications for Instant Updates</h3>
+                    <p>Stay informed with instant alerts on your donations.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="p-4 border rounded h-100 feature-card">
+                    <h3>User-Friendly Interface for Easy Navigation</h3>
+                    <p>Our intuitive design makes food sharing effortless</p>
+                </div>
+            </div>
         </div>
-        <footer th:include="@{fragments/footer.html}"></footer>
+
+        <!-- Footer Section -->
+        <footer class="text-center mt-5 p-4 bg-light">
+            <div class="d-flex gap-3 justify-content-center">
+                <a href="#" class="btn btn-primary btn-lg px-4">Learn More</a>
+                <a href="#" class="btn btn-outline-primary btn-lg px-4">Sign Up</a>
+            </div>
+        </footer>
     </div>
+
+    <footer th:include="@{fragments/footer.html}"></footer>
+</div>
 </body>
 </html>
