@@ -9,12 +9,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-
+//fooditem model
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Document(collection = "items") // MongoDBのコレクション名
+@Document(collection = "items") // MongoDB collection name
+
+// data fields
 public class FoodItem {
     @Id
     private String id;

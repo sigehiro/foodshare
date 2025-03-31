@@ -1,7 +1,10 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light" th:fragment="header">
     <div class="container-fluid">
         <!-- Logo -->
-        <a class="navbar-brand" href="#">FoodShare Connect (The logo would be here)</a>
+        <a class="navbar-brand" href="#">
+            <img th:src="@{/images/foodsharelogo.png}" alt="FoodShare Logo" width="90" height="90" class="d-inline-block align-text-top">
+
+        </a>
 
         <!-- Mobile Toggler -->
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse"

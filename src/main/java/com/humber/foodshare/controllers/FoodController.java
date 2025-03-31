@@ -18,6 +18,7 @@ import java.util.List;
 @SessionAttributes("wantedItems")
 public class FoodController {
 
+    //injecting fooditemservice
     private final FoodItemService foodItemService;
 
 
@@ -27,13 +28,14 @@ public class FoodController {
     }
 
 
+//home end point
     @GetMapping("/home")
     public String home(Model model) {
         model.addAttribute("message", "Welcome to FoodShare");
         return "home";
     }
 
-
+//user dashboard end point
     @GetMapping("/user-dashboard")
     public String userDashboard(Model model, HttpSession session) {
         //past orders data
@@ -43,7 +45,7 @@ public class FoodController {
         return "user_dashboard";
     }
 
-
+//food listing endpoint
     @GetMapping("/food-listing")
     public String foodListing(Model model) {
         //isWanted = false -> show the food items that are available
@@ -60,37 +62,37 @@ public class FoodController {
         return "food_listing";
     }
 
-
+//get mapping endpoint for food posting
     @GetMapping("/food-posting")
     public String foodPosting(Model model) {
         model.addAttribute("foodItem", new FoodItem());
         return "food_posting";
     }
 
-
+      //post mapping for save endpoint
     @PostMapping("/save")
     public String saveFoodItem(@ModelAttribute FoodItem foodItem) {
         foodItemService.save(foodItem);
         return "redirect:/foodshare/food-listing";
     }
 
-
+//register endpoint
     @GetMapping("/register")
     public String register(Model model) {
         return "register";
     }
-
+//sign in endpoint
     @GetMapping("/sign-in")
     public String login(Model model) {
         return "sign_in";
     }
-
+//admin dashboard endpoint
     @GetMapping("/admin-dashboard")
     public String adminBoard(Model model) {
         return "admin_dashboard";
     }
 
-
+//postmapping end point for recieving food item
     @PostMapping("/want-food")
     public String wantFoodItem(@RequestParam String id,
                                Model model,

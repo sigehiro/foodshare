@@ -11,15 +11,17 @@ import java.util.List;
 public class FoodItemService {
     private final FoodItemRepository foodItemRepository;
 
-    @Autowired
+    @Autowired // Injects the repository dependency automatically
     public FoodItemService(FoodItemRepository foodItemRepository) {
         this.foodItemRepository = foodItemRepository;
     }
 
+    // Retrieves all food items from the database
     public List<FoodItem> findAll() {
         return foodItemRepository.findAll();
     }
 
+    // Saves a food item to the database, ensuring quantity is greater than 0
     public FoodItem save(FoodItem foodItem) {
         System.out.println("Saving food item: " + foodItem);
 
