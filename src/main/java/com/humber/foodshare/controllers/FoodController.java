@@ -70,6 +70,7 @@ public class FoodController {
         }
 
         model.addAttribute("foodItems", availableItems);
+        model.addAttribute("currentPage", 1);
         return "food_listing";
     }
 

@@ -1,0 +1,54 @@
+:root {
+    --foodshare-green: #28a745;
+}
+
+.btn-outline-foodshare {
+    border-color: var(--foodshare-green);
+    color: var(--foodshare-green);
+}
+
+.btn-outline-foodshare:hover {
+    background-color: var(--foodshare-green);
+    color: white;
+}
+
+.text-foodshare {
+    color: var(--foodshare-green);
+}
+
+.nav-links a:hover {
+    color: var(--foodshare-green);
+}
+footer a:hover {
+    color: #28a745 !important;
+}
+
+:root {
+    --primary-color: #28a745;
+    --primary-hover: #218838;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-hover);
+    border-color: var(--primary-hover);
+}
+.hover-highlight:hover {
+    background-color: rgba(40, 167, 69, 0.05);
+    cursor: pointer;
+}
+
+.hero {
+    background-color: #f8f9fa;
+    background-image: linear-gradient(to bottom,
+    rgba(255,255,255,0.9),
+    rgba(248,249,250,0.9));
+}
+.image-upload:hover {
+    background-color: rgba(40, 167, 69, 0.05);
+    transition: background-color 0.3s ease;
+}
