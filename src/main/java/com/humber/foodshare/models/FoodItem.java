@@ -14,7 +14,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Document(collection = "items") // MongoDBのコレクション名
+@Document(collection = "items") //  MongoDB:collection name
 public class FoodItem {
     @Id
     private String id;
