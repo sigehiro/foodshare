@@ -5,6 +5,9 @@ import com.humber.foodshare.models.FoodItem;
 import com.humber.foodshare.services.FoodItemService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+//import org.springframework.security.core.Authentication;
+//import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -36,7 +39,17 @@ public class FoodController {
 
     @GetMapping("/user-dashboard")
     public String userDashboard(Model model, HttpSession session) {
+        // ユーザーが認証されているか確認
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        if (authentication == null || !authentication.isAuthenticated() ||
+//                !(authentication instanceof UsernamePasswordAuthenticationToken)) {
+//            return "redirect:/login?error=true"; // 未認証の場合はログイン画面にリダイレクト
+//        }
+
         //past orders data
+//        List wantedItems = (List) session.getAttribute("wantedItems");
+//        model.addAttribute("wantedItems", wantedItems != null ? wantedItems : new ArrayList<>());
+
         List<FoodItem> wantedItems = (List<FoodItem>) session.getAttribute("wantedItems");
         model.addAttribute("wantedItems", wantedItems != null ? wantedItems : new ArrayList<>());
 
@@ -74,7 +87,7 @@ public class FoodController {
         return "redirect:/foodshare/food-listing";
     }
 
-
+    //#TODO 暫定でOPenにする。SecurityConfigのコードをCloseにしたらここは、コメントアウトにする
     @GetMapping("/register")
     public String register(Model model) {
         return "register";
@@ -84,6 +97,7 @@ public class FoodController {
     public String login(Model model) {
         return "sign_in";
     }
+    //TODO ここまで
 
     @GetMapping("/admin-dashboard")
     public String adminBoard(Model model) {
