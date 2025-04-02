@@ -1,7 +1,13 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light" th:fragment="header">
+
     <div class="container-fluid">
-        <!-- Logo -->
-        <a class="navbar-brand" href="#">FoodShare Connect (The logo would be here)</a>
+
+            <!-- Logo -->
+            <a class="navbar-brand" href="#">
+                <img th:src="@{/images/foodlogo.png}" alt="FoodShare Logo" width="90" height="90" class="d-inline-block align-text-top">
+
+            </a>
+
 
         <!-- Mobile Toggler -->
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -17,7 +23,7 @@
                     <a class="nav-link" th:href="@{/foodshare/home}">Home Page</a>
                 </li>
 
-                <li class="nav-item"><a class="nav-link" th:href="@{/foodshare/user-dashboard}">9999User Dashboard</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/foodshare/user-dashboard}">User Dashboard</a></li>
                 <li class="nav-item"><a class="nav-link" th:href="@{/foodshare/food-listing}">Food Listing</a></li>
                 <li class="nav-item"><a class="nav-link" th:href="@{/foodshare/food-posting}">Food Posting</a></li>
                 <!--            <li class="nav-item"><a class="nav-link" th:href="@{/login}">Sign In</a></li>-->
