@@ -14,7 +14,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Document(collection = "items") //  MongoDB:collection name
+@Document(collection = "items") // MongoDB:collection name
 public class FoodItem {
     @Id
     private String id;
@@ -23,7 +23,6 @@ public class FoodItem {
     private String allergenInfo;
     private String pickupTime;
     private String location;
-
     private boolean isWanted;
-
+    private String imageUrl; // New field for image storage
 }
