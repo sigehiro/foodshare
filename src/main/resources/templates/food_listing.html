@@ -26,7 +26,15 @@
       font-weight: 600;
       text-align: center;
     }
+    .main {
+      display: flex; /* フレックスボックスに設定 */
+      flex-direction: column; /* 縦方向に配置 */
+      min-height: 100vh; /* 画面の高さを占める */
+    }
 
+    .listing-container {
+      flex: 1;
+    }
     .search-filter {
       background: white;
       padding: 1.5rem;
@@ -126,6 +134,7 @@
     .page-link {
       color: var(--primary-green);
     }
+
   </style>
 </head>
 <body>
