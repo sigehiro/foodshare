@@ -1,20 +1,20 @@
 package com.humber.foodshare.controllers;
 
-
 import com.humber.foodshare.models.FoodItem;
 import com.humber.foodshare.services.FoodItemService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-//import org.springframework.security.core.Authentication;
-//import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.IOException;
+import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.UUID;
 
 @Controller
 @RequestMapping("/foodshare")
@@ -23,12 +23,10 @@ public class FoodController {
 
     private final FoodItemService foodItemService;
 
-
     @Autowired
     public FoodController(FoodItemService foodItemService) {
         this.foodItemService = foodItemService;
     }
-
 
     @GetMapping("/home")
     public String home(Model model) {
@@ -36,30 +34,15 @@ public class FoodController {
         return "home";
     }
 
-
     @GetMapping("/user-dashboard")
     public String userDashboard(Model model, HttpSession session) {
-        // ユーザーが認証されているか確認
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        if (authentication == null || !authentication.isAuthenticated() ||
-//                !(authentication instanceof UsernamePasswordAuthenticationToken)) {
-//            return "redirect:/login?error=true"; // 未認証の場合はログイン画面にリダイレクト
-//        }
-
-        //past orders data
-//        List wantedItems = (List) session.getAttribute("wantedItems");
-//        model.addAttribute("wantedItems", wantedItems != null ? wantedItems : new ArrayList<>());
-
         List<FoodItem> wantedItems = (List<FoodItem>) session.getAttribute("wantedItems");
         model.addAttribute("wantedItems", wantedItems != null ? wantedItems : new ArrayList<>());
-
         return "user_dashboard";
     }
 
-
     @GetMapping("/food-listing")
     public String foodListing(Model model) {
-        //isWanted = false -> show the food items that are available
         List<FoodItem> foodItems = foodItemService.findAll();
         List<FoodItem> availableItems = new ArrayList<>();
 
@@ -74,21 +57,65 @@ public class FoodController {
         return "food_listing";
     }
 
-
     @GetMapping("/food-posting")
     public String foodPosting(Model model) {
         model.addAttribute("foodItem", new FoodItem());
         return "food_posting";
     }
 
-
     @PostMapping("/save")
-    public String saveFoodItem(@ModelAttribute FoodItem foodItem) {
+    public String saveFoodItem(@ModelAttribute FoodItem foodItem,
+                               @RequestParam(value = "foodImage", required = false) MultipartFile file,
+                               RedirectAttributes redirectAttributes) {
+
+        // Handle image upload if present
+        if (file != null && !file.isEmpty()) {
+            try {
+                // Validate file type
+                String contentType = file.getContentType();
+                if (contentType == null ||
+                        (!contentType.equals("image/jpeg") && !contentType.equals("image/png"))) {
+                    redirectAttributes.addFlashAttribute("error", "Only JPEG or PNG images are allowed");
+                    return "redirect:/foodshare/food-posting";
+                }
+
+                // Validate file size (5MB max)
+                if (file.getSize() > 5 * 1024 * 1024) {
+                    redirectAttributes.addFlashAttribute("error", "File size exceeds 5MB limit");
+                    return "redirect:/foodshare/food-posting";
+                }
+
+                // Generate unique filename
+                String originalFilename = file.getOriginalFilename();
+                String fileExtension = originalFilename != null ?
+                        originalFilename.substring(originalFilename.lastIndexOf(".")) : "";
+                String fileName = UUID.randomUUID().toString() + fileExtension;
+
+                // Save file to uploads directory
+                Path uploadPath = Paths.get("uploads");
+                if (!Files.exists(uploadPath)) {
+                    Files.createDirectories(uploadPath);
+                }
+
+                Files.copy(file.getInputStream(), uploadPath.resolve(fileName),
+                        StandardCopyOption.REPLACE_EXISTING);
+
+                // Set image path on food item
+                foodItem.setImageUrl("/uploads/" + fileName);
+
+            } catch (IOException e) {
+                redirectAttributes.addFlashAttribute("error", "Failed to upload image");
+                return "redirect:/foodshare/food-posting";
+            }
+        }
+
+        // Save the food item (existing logic)
         foodItemService.save(foodItem);
+        redirectAttributes.addFlashAttribute("success", "Food posted successfully!");
+
         return "redirect:/foodshare/food-listing";
     }
 
-    //#TODO 暫定でOPenにする。SecurityConfigのコードをCloseにしたらここは、コメントアウトにする
     @GetMapping("/register")
     public String register(Model model) {
         return "register";
@@ -98,13 +125,16 @@ public class FoodController {
     public String login(Model model) {
         return "sign_in";
     }
-    //TODO ここまで
 
     @GetMapping("/admin-dashboard")
     public String adminBoard(Model model) {
         return "admin_dashboard";
     }
 
+    @GetMapping("/terms")
+    public String terms(Model model) {
+        return "terms";
+    }
 
     @PostMapping("/want-food")
     public String wantFoodItem(@RequestParam String id,
@@ -114,7 +144,7 @@ public class FoodController {
 
         // update item condition. set wanted to true
         foodItem.setWanted(true);
-        foodItemService.save(foodItem); // save th MongoDB
+        foodItemService.save(foodItem); // save to MongoDB
 
         // add wantedItems
         List<FoodItem> wantedItems = (List<FoodItem>) session.getAttribute("wantedItems");
@@ -127,5 +157,4 @@ public class FoodController {
 
         return "redirect:/foodshare/user-dashboard";
     }
-
 }
