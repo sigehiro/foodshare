@@ -114,7 +114,7 @@
     <div class="food-posting-container">
       <h1 class="form-title">Food Posting Form</h1>
 
-      <form action="/foodshare/save" method="post" th:object="${foodItem}">
+      <form action="/foodshare/save" method="post" th:object="${foodItem}" enctype="multipart/form-data">
         <!-- Type of Food -->
         <div class="form-group">
           <label for="foodType" class="form-label">Type of food</label>
@@ -151,7 +151,7 @@
           <div class="image-upload-container" onclick="document.getElementById('food-image').click()">
             <div class="upload-icon">+</div>
             <div class="upload-text">Click to upload food image</div>
-            <input type="file" id="food-image" name="food-image" accept="image/*">
+            <input type="file" id="food-image" name="foodImage" accept="image/*">
           </div>
         </div>
 

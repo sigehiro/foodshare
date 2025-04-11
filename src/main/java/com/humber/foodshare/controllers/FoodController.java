@@ -63,7 +63,7 @@ public class FoodController {
     @PostMapping("/save")
     public String saveFoodItem(@ModelAttribute FoodItem foodItem,
                                @RequestParam(value = "foodImage", required = false) MultipartFile file,
-                               RedirectAttributes redirectAttributes) throws IOException{
+                               RedirectAttributes redirectAttributes) throws IOException {
 
         // Handle image upload if present
         if (file != null && !file.isEmpty()) {
@@ -82,30 +82,33 @@ public class FoodController {
                     return "redirect:/foodshare/food-posting";
                 }
 
-                // Generate unique filename
-                String originalFilename = file.getOriginalFilename();
-                String fileExtension = originalFilename != null ?
-                        originalFilename.substring(originalFilename.lastIndexOf(".")) : "";
-                String fileName = UUID.randomUUID().toString() + fileExtension;
-
                 // Save file to uploads directory
                 Path uploadPath = Paths.get("uploads");
                 if (!Files.exists(uploadPath)) {
                     Files.createDirectories(uploadPath);
                 }
 
+                // Set image path on food item
+                String originalFilename = file.getOriginalFilename();
+                String fileExtension = originalFilename != null ?
+                        originalFilename.substring(originalFilename.lastIndexOf(".")) : "";
+                String fileName = UUID.randomUUID().toString() + fileExtension;
+
                 Files.copy(file.getInputStream(), uploadPath.resolve(fileName),
                         StandardCopyOption.REPLACE_EXISTING);
-
-                // Set image path on food item
                 foodItem.setImageUrl("/uploads/" + fileName);
+
+                // Set image data (byte array) on food item
+                foodItem.setImageData(file.getBytes());
+                foodItem.setImageType(contentType);
 
             } catch (IOException e) {
                 redirectAttributes.addFlashAttribute("error", "Failed to upload image");
                 return "redirect:/foodshare/food-posting";
             }
         }
-
+//        debag log
+        System.out.println(foodItem);
         // Save using MongoDB repository
         foodItemRepository.save(foodItem);
         redirectAttributes.addFlashAttribute("success", "Food posted successfully!");
