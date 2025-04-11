@@ -170,7 +170,7 @@
     <div th:if="${foodItems != null and !foodItems.empty}" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
       <div class="col" th:each="item : ${foodItems}">
         <div class="food-card">
-<!--          <div class="food-image" th:style="'background-image: url(' + ${item.imageUrl ?: '/images/food-placeholder.jpg'} + ')'"></div>-->
+          <div class="food-image" th:style="'background-image: url(' + ${item.imageUrl ?: '/images/food-placeholder.jpg'} + ')'"></div>
           <div class="food-body">
             <h3 class="food-title" th:text="${item.foodType}"></h3>
 
