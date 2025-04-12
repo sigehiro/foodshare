@@ -7,14 +7,13 @@
   <title>Register - FoodShare Connect</title>
   <style>
     .auth-container {
-      min-height: 80vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      min-height: 100vh;
     }
     .auth-card {
       width: 100%;
       max-width: 400px;
+      align-items: center;
+      margin: 3rem auto;
       padding: 2rem;
       border-radius: 12px;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -30,7 +29,7 @@
 <div class="main">
   <header th:include="@{/fragments/nav.html}"></header>
 
-  <div class="content auth-container">
+  <div class="auth-container">
     <div class="auth-card">
       <div class="text-center mb-4">
         <h2 class="fw-bold mb-3">Create Account</h2>
@@ -83,9 +82,13 @@
         </div>
       </form>
     </div>
+    <div>
+      <footer th:include="@{fragments/footer.html}"></footer>
+    </div>
+
   </div>
 
-  <footer th:include="@{fragments/footer.html}"></footer>
+
 </div>
 
 <!-- Bootstrap JS -->
