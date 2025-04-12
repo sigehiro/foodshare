@@ -1,7 +1,6 @@
 package com.humber.foodshare.controllers;
 
 import com.humber.foodshare.models.User;
-//import com.humber.foodshare.services.UserService;
 import com.humber.foodshare.services.UserService;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.stereotype.Controller;
@@ -50,11 +49,4 @@ public class AuthController implements ErrorController {
         return "auth/login";
     }
 
-    //#TODO 暫定でOPenにする。SecurityConfigのコードをCloseにしたらここは、コメントアウトにする
-    @PostMapping("/login")
-    public String login(@ModelAttribute User user, Model model) {
-        model.addAttribute("message", "Login successful");
-        System.out.println("Attempting to log in with username: " + user.getUsername());
-        return "redirect:/foodshare/user-dashboard";
-    }
 }

@@ -30,12 +30,12 @@
                 <!--            <li class="nav-item"><a class="nav-link" th:href="@{/login}">Sign In</a></li>-->
 <!--                <li class="nav-item"><a class="nav-link" th:href="@{/foodshare/sign-in}">Sign In</a></li>-->
                 <!--            <li class="nav-item"><a class="nav-link" th:href="@{/foodshare/admin-dashboard}">Admin Dashboard</a></li>-->
-                <!--            <li class="nav-item" style="margin-left: auto; display: flex; align-items: center;">-->
-                <!--                <form action="#" th:action="@{/logout}" method="post" style="display:inline;">-->
-                <!--                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>-->
-                <!--                    <button type="submit" class="btn btn-danger" style="height: 38px;">Logout</button>-->
-                <!--                </form>-->
-                <!--            </li>-->
+                            <li class="nav-item" style="margin-left: auto; display: flex; align-items: center;">
+                                <form action="#" th:action="@{/logout}" method="post" style="display:inline;">
+                                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                                    <button type="submit" class="btn btn-danger" style="height: 38px;">Logout</button>
+                                </form>
+                            </li>
             </ul>
 
             <!-- Right-aligned Items -->

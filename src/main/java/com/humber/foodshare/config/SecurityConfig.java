@@ -26,19 +26,24 @@ public class SecurityConfig {
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers("/foodshare/home", "/register/**", "/login/**").permitAll()
-                        .requestMatchers("/foodshare/user-dashboard/**", "/foodshare/food-listing/**").authenticated()
-                        .requestMatchers("/foodshare/food-posting/**").hasRole("DONOR")
+                        .requestMatchers("/css/**", "/js/**", "/images/**", "/uploads/**").permitAll()
+                        .requestMatchers("/foodshare/user-dashboard/**", "/foodshare/food-listing/**", "foodshare/want-food").authenticated()
+                        .requestMatchers("/foodshare/food-posting/**", "/foodshare/save").hasRole("DONOR")
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
-                        .defaultSuccessUrl("/foodshare/user-dashboard")
+                        .loginProcessingUrl("/login")
+                        .defaultSuccessUrl("/foodshare/user-dashboard", true)
                         .failureUrl("/login?error=true")
                 )
                 .logout(logout -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/foodshare/home?logout=true")
+//                        .invalidateHttpSession(true)
+//                        .clearAuthentication(true)
                 )
+//                .csrf(csrf -> csrf.disable())
                 .exceptionHandling(exceptionHandling ->
                         exceptionHandling.authenticationEntryPoint(new CustomAuthenticationEntryPoint())
                 );

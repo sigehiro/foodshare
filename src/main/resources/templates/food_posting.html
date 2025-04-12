@@ -115,6 +115,8 @@
       <h1 class="form-title">Food Posting Form</h1>
 
       <form action="/foodshare/save" method="post" th:object="${foodItem}" enctype="multipart/form-data">
+        <!-- CSRF -->
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
         <!-- Type of Food -->
         <div class="form-group">
           <label for="foodType" class="form-label">Type of food</label>

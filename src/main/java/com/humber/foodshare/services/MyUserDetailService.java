@@ -21,12 +21,14 @@ public class MyUserDetailService implements UserDetailsService {
     // Note: Although the method name is loadUserByUsername, we are using email for lookup
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        System.out.println("Attempting to load user by email: " + email);
         Optional<com.humber.foodshare.models.User> userOp = Optional.ofNullable(userRepository.findByEmail(email));
-        System.out.println("userOp: " + userOp);
+        System.out.println("User found in database: " + userOp.isPresent());
 
         if (userOp.isPresent()) {
             com.humber.foodshare.models.User user = userOp.get();
             return User.builder()
+//                    .username(email)
                     .username(user.getUsername())
                     .password(user.getPassword()) // DBから取得したパスワード
                     .roles(user.getUserType()) // userTypeをそのまま渡す
