@@ -37,35 +37,36 @@
         <p class="text-muted">Join the FoodShare community</p>
       </div>
 
-      <form action="/register" method="post">
+      <form th:action="@{/register}" method="post" th:object="${user}">
+        <!-- CSRF -->
+        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
         <div class="mb-3">
           <label for="name" class="form-label">Full Name</label>
-          <input type="text" class="form-control form-control-lg"
-                 id="name" name="name" required
-                 placeholder="Enter your full name">
+          <input type="text" class="form-control form-control-lg" id="name"  required
+                 placeholder="Enter your full name" th:field="*{username}"/>
         </div>
 
         <div class="mb-3">
           <label for="email" class="form-label">Email Address</label>
           <input type="email" class="form-control form-control-lg"
-                 id="email" name="email" required
-                 placeholder="Enter your email">
+                 id="email"  required
+                 placeholder="Enter your email" th:field="*{email}" />
         </div>
 
         <div class="mb-3">
           <label for="password" class="form-label">Password</label>
           <input type="password" class="form-control form-control-lg"
-                 id="password" name="password" required
-                 placeholder="Create a password">
+                 id="password" required
+                 placeholder="Create a password" th:field="*{password}" />
         </div>
 
         <div class="mb-4">
           <label for="userType" class="form-label">User Type</label>
           <select class="form-select form-control-lg"
-                  name="userType" id="userType" required>
+                  id="userType" required th:field="*{userType}">
             <option value="" disabled selected>Select User Type:</option>
-            <option value="donor">Food Donor</option>
-            <option value="recipient">Recipient Organization</option>
+            <option value="DONOR">Food Donor</option>
+            <option value="RECIPIENT">Recipient Organization</option>
           </select>
         </div>
 
@@ -75,7 +76,7 @@
 
         <div class="text-center pt-3">
           <p class="text-muted">Already have an account?
-            <a th:href="@{/foodshare/sign-in}" class="text-decoration-none text-primary">
+            <a th:href="@{/login}" class="text-decoration-none text-primary">
               Sign in here
             </a>
           </p>

@@ -19,14 +19,14 @@ public class AuthController implements ErrorController {
 
     @GetMapping("/error")
     public String error403() {
-        return "auth/error403"; // エラーページのテンプレート名
+        return "auth/error403"; // move to erroer page
     }
 
 
     @GetMapping("/register")
     public String showRegistrationForm(Model model, @RequestParam(required = false) String message) {
         model.addAttribute("user", new User());
-        model.addAttribute("message", message); // メッセージをモデルに追加
+        model.addAttribute("message", message);
         return "auth/register";
     }
 
@@ -35,9 +35,11 @@ public class AuthController implements ErrorController {
     public String register(@ModelAttribute User user) {
         int statusCode = userService.saveUser(user);
         if (statusCode == 0) {
+            System.out.println("User already exists: " + user.getEmail());
             return "redirect:/register?message=User already exists"; // ユーザーが既に存在する場合
         } else {
-            return "redirect:/login?message=User registered successfully"; // 成功した場合
+            System.out.println("User registered successfully: " + user.getEmail());
+            return "redirect:/login?message=User registered successfully"; // successful registration: move to login page
         }
     }
 

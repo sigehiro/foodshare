@@ -116,15 +116,15 @@ public class FoodController {
         return "redirect:/foodshare/food-listing";
     }
 
-    @GetMapping("/register")
-    public String register(Model model) {
-        return "register";
-    }
-
-    @GetMapping("/sign-in")
-    public String login(Model model) {
-        return "sign_in";
-    }
+//    @GetMapping("/register")
+//    public String register(Model model) {
+//        return "register";
+//    }
+//
+//    @GetMapping("/sign-in")
+//    public String login(Model model) {
+//        return "sign_in";
+//    }
 
     @GetMapping("/admin-dashboard")
     public String adminBoard(Model model) {
