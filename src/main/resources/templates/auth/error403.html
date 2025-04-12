@@ -21,6 +21,22 @@
       flex: 1;
     }
 
+    .error-container {
+      text-align: center;
+      padding: 30px;
+    }
+
+    .error-container img {
+      max-width: calc(100% - 60px);
+      height: auto;
+      margin: 0 auto;
+      display: block;
+    }
+    .btn-primary {
+      font-size: 1.5rem;
+      padding: 10px 20px;
+    }
+
     footer {
       padding: 1rem;
       text-align: center;
@@ -28,22 +44,21 @@
   </style>
 </head>
 <body>
-<div class="main">
-<!-- ＃TODO  Error: For some reason, adding the header and footer causes an error-->
-<!--  <header th:replace="fragments/nav :: nav"></header>-->
+  <div class="main">
+  <!-- ＃TODO  Error: For some reason, adding the header and footer causes an error-->
+  <!--  <header th:replace="fragments/nav :: nav"></header>-->
 
-    <div class="content">
-      <div class="error-container" style="text-align: center;">
-        <h1 class="error-heading">403 Unauthorized Access!</h1>
-        <a href="/foodshare/home" class="btn btn-primary">Go to the Landing Page!!!</a>
+      <div class="content">
+        <div class="error-container" style="text-align: center;">
+          <div>
+            <img th:src="@{/images/error404.jpg}" alt="Error image">
+          </div>
+
+          <a href="/foodshare/home" class="btn btn-primary">Go to the Landing Page!!!</a>
+        </div>
       </div>
-    </div>
-  <a href="/foodshare/home">Go to the Landing Page</a>
 
-<!--  <footer th:replace="fragments/footer :: footer"></footer>-->
-
-</div>
-
-<!--<body>-->
+  <!--  <footer th:replace="fragments/footer :: footer"></footer>-->
+  </div>
 </body>
 </html>

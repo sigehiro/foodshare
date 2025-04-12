@@ -25,7 +25,11 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers("/foodshare/home", "/register/**", "/login/**").permitAll()
+                        .requestMatchers("/foodshare/home",
+                                        "/foodshare/terms",
+                                        "/foodshare/policy",
+                                        "/register/**",
+                                        "/login/**").permitAll()
                         .requestMatchers("/css/**", "/js/**", "/images/**", "/uploads/**").permitAll()
                         .requestMatchers("/foodshare/user-dashboard/**", "/foodshare/food-listing/**", "foodshare/want-food").authenticated()
                         .requestMatchers("/foodshare/food-posting/**", "/foodshare/save").hasRole("DONOR")

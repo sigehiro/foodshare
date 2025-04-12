@@ -125,6 +125,11 @@ public class FoodController {
         return "terms";
     }
 
+    @GetMapping("/policy")
+    public String policy(Model model) {
+        return "policy";
+    }
+
     @PostMapping("/want-food")
     public String wantFoodItem(@RequestParam String id,
                                Model model,
