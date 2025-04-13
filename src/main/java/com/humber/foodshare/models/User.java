@@ -19,4 +19,5 @@ public class User {
     private String email;
     private String password;
     private String userType; // "DONOR" or "RECIPIENT"
+    private boolean isActive;
 }

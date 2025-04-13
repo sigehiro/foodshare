@@ -108,8 +108,7 @@
 </head>
 <body>
 <div class="main">
-  <header th:include="@{/fragments/nav.html}"></header>
-
+  <header th:replace="fragments/nav :: nav"></header>
   <div class="content">
     <div class="food-posting-container">
       <h1 class="form-title">Food Posting Form</h1>
@@ -162,9 +161,9 @@
       </form>
     </div>
   </div>
-
   <footer th:include="@{fragments/footer.html}"></footer>
 </div>
+
 
 <script>
   // Update the upload text when a file is selected
@@ -179,7 +178,6 @@
     }
   });
 </script>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

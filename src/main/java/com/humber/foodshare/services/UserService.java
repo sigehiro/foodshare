@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 @Service
 public class UserService {
@@ -19,7 +21,7 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    // ユーザーを保存するメソッド
+    // save user
     public int saveUser(User user) {
         System.out.println("Attempting to save user: " + user);
         // check exit user
@@ -28,23 +30,45 @@ public class UserService {
             return 0; // already user
         }
 
-        // save encording passward
+        // save encoded password
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         if (user.getUserType() == null || user.getUserType().isEmpty()) {
-            user.setUserType("RECIPIENT"); // デフォルトの役割をRECIPIENTに設定
-        }else if (user.getUserType().equals("DONOR")) {
+            user.setUserType("RECIPIENT"); // Default role is RECIPIENT
+        } else if (user.getUserType().equals("DONOR")) {
             user.setUserType("DONOR");
         }
 
+        user.setActive(true);
         userRepository.save(user);
         System.out.println("User saved successfully: " + user.getEmail());
         return 1; // success
     }
 
-    // TODO　不要かも。ユーザー名からユーザーを検索するメソッド
-//    public Optional<User> findByUsername(String username) {
-//        return userRepository.findByUsername(username);
-//    }
+    //find user by email for admin
+    public List<User> findAllUsers() {
+        return userRepository.findAll();
+    }
+
+    //delete user by id for admin
+    public void deleteUserByEmail(String email) {
+        User user = userRepository.findByEmail(email);
+        if (user != null) {
+            userRepository.delete(user);
+        } else {
+            throw new IllegalArgumentException("No user found with email: " + email);
+        }
+    }
+
+    // freeze user by id for admin
+    public void freezeUserByEmail(String email) {
+        User user = userRepository.findByEmail(email);
+        if (user != null) {
+            user.setActive(false);
+            userRepository.save(user);
+        } else {
+            throw new IllegalArgumentException("No user found with email: " + email);
+        }
+    }
 
 }

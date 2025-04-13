@@ -25,14 +25,24 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers("/foodshare/home",
+                        .requestMatchers(
+                                        "/foodshare/home",
                                         "/foodshare/terms",
                                         "/foodshare/policy",
                                         "/register/**",
-                                        "/login/**").permitAll()
-                        .requestMatchers("/css/**", "/js/**", "/images/**", "/uploads/**").permitAll()
-                        .requestMatchers("/foodshare/user-dashboard/**", "/foodshare/food-listing/**", "foodshare/want-food").authenticated()
+                                        "/login/**"
+                                        ).permitAll()
+                        .requestMatchers("/css/**",
+                                        "/js/**",
+                                        "/images/**",
+                                        "/uploads/**"
+                                        ).permitAll()
+                        .requestMatchers("/foodshare/user-dashboard/**",
+                                        "/foodshare/food-listing/**",
+                                        "/foodshare/want-food"
+                                        ).authenticated()
                         .requestMatchers("/foodshare/food-posting/**", "/foodshare/save").hasRole("DONOR")
+                        .requestMatchers("/foodshare/admin-dashboard/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
@@ -44,10 +54,8 @@ public class SecurityConfig {
                 .logout(logout -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/foodshare/home?logout=true")
-//                        .invalidateHttpSession(true)
-//                        .clearAuthentication(true)
+
                 )
-//                .csrf(csrf -> csrf.disable())
                 .exceptionHandling(exceptionHandling ->
                         exceptionHandling.authenticationEntryPoint(new CustomAuthenticationEntryPoint())
                 );
