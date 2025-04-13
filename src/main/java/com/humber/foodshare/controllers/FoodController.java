@@ -115,10 +115,10 @@ public class FoodController {
         return "redirect:/foodshare/food-listing"; // redirect to food listing page(302確認済み)
     }
 
-    @GetMapping("/admin-dashboard")
-    public String adminBoard(Model model) {
-        return "admin_dashboard";
-    }
+//    @GetMapping("/admin-dashboard")
+//    public String adminBoard(Model model) {
+//        return "admin_dashboard";
+//    }
 
     @GetMapping("/terms")
     public String terms(Model model) {

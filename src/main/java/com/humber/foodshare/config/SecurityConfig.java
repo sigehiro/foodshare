@@ -33,6 +33,7 @@ public class SecurityConfig {
                         .requestMatchers("/css/**", "/js/**", "/images/**", "/uploads/**").permitAll()
                         .requestMatchers("/foodshare/user-dashboard/**", "/foodshare/food-listing/**", "foodshare/want-food").authenticated()
                         .requestMatchers("/foodshare/food-posting/**", "/foodshare/save").hasRole("DONOR")
+                        .requestMatchers("/foodshare/admin-dashboard/**").hasRole("ADMIN") // Only Admin can access this
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
@@ -44,10 +45,8 @@ public class SecurityConfig {
                 .logout(logout -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/foodshare/home?logout=true")
-//                        .invalidateHttpSession(true)
-//                        .clearAuthentication(true)
+
                 )
-//                .csrf(csrf -> csrf.disable())
                 .exceptionHandling(exceptionHandling ->
                         exceptionHandling.authenticationEntryPoint(new CustomAuthenticationEntryPoint())
                 );
