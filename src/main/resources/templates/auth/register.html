@@ -48,7 +48,7 @@
 </head>
 <body>
 <div class="main">
-  <header th:include="@{/fragments/nav.html}"></header>
+  <header th:replace="fragments/nav :: nav"></header>
   <div class="auth-container">
     <div class="auth-card">
       <div class="text-center mb-4">
