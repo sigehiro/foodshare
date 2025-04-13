@@ -107,23 +107,12 @@ public class FoodController {
                 return "redirect:/foodshare/food-posting";
             }
         }
-//        debag log
-        System.out.println(foodItem);
+
         // Save using MongoDB repository
         foodItemRepository.save(foodItem);
         redirectAttributes.addFlashAttribute("success", "Food posted successfully!");
 
-        return "redirect:/foodshare/food-listing";
-    }
-
-    @GetMapping("/register")
-    public String register(Model model) {
-        return "register";
-    }
-
-    @GetMapping("/sign-in")
-    public String login(Model model) {
-        return "sign_in";
+        return "redirect:/foodshare/food-listing"; // redirect to food listing page(302確認済み)
     }
 
     @GetMapping("/admin-dashboard")
@@ -134,6 +123,11 @@ public class FoodController {
     @GetMapping("/terms")
     public String terms(Model model) {
         return "terms";
+    }
+
+    @GetMapping("/policy")
+    public String policy(Model model) {
+        return "policy";
     }
 
     @PostMapping("/want-food")
