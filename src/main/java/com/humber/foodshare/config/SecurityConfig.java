@@ -41,7 +41,7 @@ public class SecurityConfig {
                                         "/foodshare/food-listing/**",
                                         "/foodshare/want-food"
                                         ).authenticated()
-                        .requestMatchers("/foodshare/food-posting/**", "/foodshare/save").hasRole("DONOR")
+                        .requestMatchers("/foodshare/food-posting/**", "/foodshare/save").hasAnyRole("DONOR", "ADMIN")
                         .requestMatchers("/foodshare/admin-dashboard/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
