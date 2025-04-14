@@ -22,7 +22,6 @@
       display: flex;
       flex-direction: column;
       padding: 0 15px;
-      max-width: 1200px;
     }
 
     footer {
@@ -40,10 +39,6 @@
       background-color: #bfbfbf !important ;
 
     }
-
-    /*.active-row {*/
-    /*  background-color: #d4edda;*/
-    /*}*/
 
     .frozen-row {
       background-color: #f8d7da;
@@ -75,7 +70,6 @@
           <table class="table  table-hover">
             <thead>
             <tr>
-    <!--          <th>ID</th>-->
               <th>Username</th>
               <th>Email</th>
               <th>User Type</th>
@@ -86,7 +80,6 @@
             <tbody>
             <tr th:each="user : ${users}"
                 th:class="${user.isActive ? 'active-row' : 'frozen-row'}">
-    <!--          <td th:text="${user.id}"></td>-->
               <td th:text="${user.username}"></td>
               <td th:text="${user.email}"></td>
               <td th:text="${user.userType}"></td>
