@@ -2,7 +2,7 @@
 
     <div class="container-fluid">
             <!-- Logo -->
-            <a class="navbar-brand" href="#">
+            <a class="navbar-brand" th:href="@{/foodshare/home}">
                 <img th:src="@{/images/foodlogo.png}" alt="FoodShare Logo" width="90" height="90" class="d-inline-block align-text-top">
             </a>
 
@@ -16,11 +16,11 @@
         <!-- Navigation Links -->
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item"><a class="nav-link" th:href="@{/foodshare/home}">Home Page</a></li>
-                <li class="nav-item"><a class="nav-link" th:href="@{/foodshare/user-dashboard}">User Dashboard</a></li>
-                <li class="nav-item"><a class="nav-link" th:href="@{/foodshare/food-listing}">Food Listing</a></li>
-                <li class="nav-item"><a class="nav-link" th:href="@{/foodshare/food-posting}">Food Posting</a></li>
-                <li class="nav-item"><a class="nav-link" th:href="@{/foodshare/admin-dashboard}">Admin Dashboard</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/foodshare/home}">Home</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/foodshare/user-dashboard}">User-Dashboard</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/foodshare/food-listing}">Food-Listing</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/foodshare/food-posting}">Food-Posting</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/foodshare/admin-dashboard}">Admin</a></li>
             </ul>
 
             <!-- Right-aligned Items -->
