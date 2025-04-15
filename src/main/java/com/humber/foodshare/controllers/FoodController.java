@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Controller
@@ -45,12 +46,18 @@ public class FoodController {
         return "user_dashboard";
     }
 
+    // Using FoodItemService to get paginated results in MongoDB
     @GetMapping("/food-listing")
-    public String foodListing(Model model) {
-        // Using MongoDB repository directly
-        List<FoodItem> availableItems = foodItemRepository.findByIsWanted(false);
-        model.addAttribute("foodItems", availableItems);
-        model.addAttribute("currentPage", 1);
+    public String foodListing(Model model, @RequestParam(defaultValue = "1") int page) {
+        int pageSize = 12; // page size set 12
+        // Get food items from the service
+        Map<String, Object> result = foodItemService.findAll(page, pageSize);
+
+        model.addAttribute("foodItems", result.get("foodItems"));
+        model.addAttribute("currentPage", result.get("currentPage"));
+        model.addAttribute("totalPages", result.get("totalPages"));
+        model.addAttribute("totalItems", result.get("totalItems"));
+
         return "food_listing";
     }
 
