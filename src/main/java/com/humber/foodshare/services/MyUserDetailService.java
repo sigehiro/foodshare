@@ -26,7 +26,7 @@ public class MyUserDetailService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         System.out.println("Attempting to load user by email: " + email);
-        Optional<com.humber.foodshare.models.User> userOp = Optional.ofNullable(userRepository.findByEmail(email));
+        Optional<com.humber.foodshare.models.User> userOp = userRepository.findByEmail(email);
         System.out.println("User found in database: " + userOp.isPresent());
 
         if (userOp.isPresent()) {
@@ -38,7 +38,7 @@ public class MyUserDetailService implements UserDetailsService {
             }
 
             return User.builder()
-                    .username(user.getUsername())
+                    .username(user.getEmail())
                     .password(user.getPassword())
                     .roles(user.getUserType())
                     .build();
