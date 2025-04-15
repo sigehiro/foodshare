@@ -83,7 +83,9 @@ public class FoodController {
                 }
 
                 // Save file to uploads directory
-                Path uploadPath = Paths.get("uploads");
+//                Path uploadPath = Paths.get("uploads");
+                String projectDirectory = System.getProperty("user.dir");
+                Path uploadPath = Paths.get(projectDirectory, "src", "main", "resources", "static", "uploads");
                 if (!Files.exists(uploadPath)) {
                     Files.createDirectories(uploadPath);
                 }
@@ -114,11 +116,6 @@ public class FoodController {
 
         return "redirect:/foodshare/food-listing"; // redirect to food listing page(302確認済み)
     }
-
-//    @GetMapping("/admin-dashboard")
-//    public String adminBoard(Model model) {
-//        return "admin_dashboard";
-//    }
 
     @GetMapping("/terms")
     public String terms(Model model) {
