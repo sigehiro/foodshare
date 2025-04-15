@@ -178,26 +178,26 @@
     <h1 class="page-header">Available Food Listings</h1>
 
     <!-- Search and Filter Section -->
-    <div class="search-filter">
-      <div class="row g-3">
-        <div class="col-md-6">
-          <input type="text" class="form-control" placeholder="Search by food type...">
-        </div>
-        <div class="col-md-3">
-          <select class="form-select">
-            <option selected>All Locations</option>
-            <option>Downtown</option>
-            <option>Northside</option>
-            <option>East End</option>
-          </select>
-        </div>
-        <div class="col-md-3">
-          <button class="btn btn-primary w-100" style="background-color: var(--primary-green); border: none;">
-            Apply Filters
-          </button>
-        </div>
-      </div>
-    </div>
+<!--    <div class="search-filter">-->
+<!--      <div class="row g-3">-->
+<!--        <div class="col-md-9">-->
+<!--          <input type="text" class="form-control" placeholder="Search by food type...">-->
+<!--        </div>-->
+<!--        <div class="col-md-3">-->
+<!--          <select class="form-select">-->
+<!--            <option selected>All Locations</option>-->
+<!--            <option>Downtown</option>-->
+<!--            <option>Northside</option>-->
+<!--            <option>East End</option>-->
+<!--          </select>-->
+<!--        </div>-->
+<!--        <div class="col-md-3">-->
+<!--          <button class="btn btn-primary w-100" style="background-color: var(&#45;&#45;primary-green); border: none;">-->
+<!--            Apply Filters-->
+<!--          </button>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
 
     <!-- Food Listings Grid -->
     <div th:if="${foodItems != null and !foodItems.empty}" class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-4">
