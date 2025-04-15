@@ -65,11 +65,37 @@
       box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
     }
 
-    .food-image {
+    .food-image-container {
       height: 180px;
       background-color: var(--light-gray);
-      background-size: cover;
-      background-position: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .food-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .no-image-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: var(--dark-gray);
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .no-image-placeholder svg {
+      width: 48px;
+      height: 48px;
+      margin-bottom: 0.5rem;
+      fill: var(--dark-gray);
     }
 
     .food-body {
@@ -177,7 +203,29 @@
     <div th:if="${foodItems != null and !foodItems.empty}" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
       <div class="col" th:each="item : ${foodItems}">
         <div class="food-card">
-          <div class="food-image" th:style="'background-image: url(' + ${item.imageUrl ?: '/images/food-placeholder.jpg'} + ')'"></div>
+          <!-- Image Container - Updated for both storage approaches -->
+          <div class="food-image-container">
+            <!-- Option 1: If using external file storage (imageUrl) -->
+            <th:block th:if="${item.imageUrl != null}">
+              <img th:src="@{${item.imageUrl}}" alt="Food image" class="food-image">
+            </th:block>
+
+            <!-- Option 2: If storing binary data directly in MongoDB -->
+            <th:block th:if="${item.imageData != null and item.imageUrl == null}">
+              <img th:src="@{'/foodshare/image/' + ${item.id}}" alt="Food image" class="food-image">
+            </th:block>
+
+            <!-- Fallback when no image -->
+            <th:block th:unless="${item.imageUrl != null or item.imageData != null}">
+              <div class="no-image-placeholder">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                  <path d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-4.86 8.86l-3 3.87L9 13.14 6 17h12l-3.86-5.14z"/>
+                </svg>
+                <span>Picture Not Provided</span>
+              </div>
+            </th:block>
+          </div>
+
           <div class="food-body">
             <h3 class="food-title" th:text="${item.foodType}"></h3>
 
