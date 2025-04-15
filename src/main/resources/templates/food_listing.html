@@ -14,6 +14,10 @@
       --dark-gray: #6c757d;
     }
 
+    body {
+      background-color: #f8f9fa;
+    }
+
     .listing-container {
       max-width: 1200px;
       margin: 2rem auto;
@@ -27,9 +31,12 @@
       text-align: center;
     }
     .main {
-      display: flex; /* フレックスボックスに設定 */
-      flex-direction: column; /* 縦方向に配置 */
-      min-height: 100vh; /* 画面の高さを占める */
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      padding: 0 15px;
+      max-width: 1200px;
+      margin: 0 auto;
     }
 
     .listing-container {
@@ -170,7 +177,7 @@
     <div th:if="${foodItems != null and !foodItems.empty}" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
       <div class="col" th:each="item : ${foodItems}">
         <div class="food-card">
-<!--          <div class="food-image" th:style="'background-image: url(' + ${item.imageUrl ?: '/images/food-placeholder.jpg'} + ')'"></div>-->
+          <div class="food-image" th:style="'background-image: url(' + ${item.imageUrl ?: '/images/food-placeholder.jpg'} + ')'"></div>
           <div class="food-body">
             <h3 class="food-title" th:text="${item.foodType}"></h3>
 
@@ -200,6 +207,8 @@
             </div>
 
             <form action="/foodshare/want-food" method="post">
+              <!-- CSRF -->
+              <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
               <input type="hidden" name="id" th:value="${item.id}" />
               <button type="submit" class="want-btn">I Want This</button>
             </form>

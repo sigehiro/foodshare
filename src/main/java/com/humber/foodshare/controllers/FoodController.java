@@ -1,6 +1,7 @@
 package com.humber.foodshare.controllers;
 
 import com.humber.foodshare.models.FoodItem;
+import com.humber.foodshare.repositories.FoodItemRepository;
 import com.humber.foodshare.services.FoodItemService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +23,13 @@ import java.util.UUID;
 public class FoodController {
 
     private final FoodItemService foodItemService;
+    private final FoodItemRepository foodItemRepository;
 
     @Autowired
-    public FoodController(FoodItemService foodItemService) {
+    public FoodController(FoodItemService foodItemService,
+                          FoodItemRepository foodItemRepository) {
         this.foodItemService = foodItemService;
+        this.foodItemRepository = foodItemRepository;
     }
 
     @GetMapping("/home")
@@ -43,15 +47,8 @@ public class FoodController {
 
     @GetMapping("/food-listing")
     public String foodListing(Model model) {
-        List<FoodItem> foodItems = foodItemService.findAll();
-        List<FoodItem> availableItems = new ArrayList<>();
-
-        for (FoodItem item : foodItems) {
-            if (!item.isWanted()) {
-                availableItems.add(item);
-            }
-        }
-
+        // Using MongoDB repository directly
+        List<FoodItem> availableItems = foodItemRepository.findByIsWanted(false);
         model.addAttribute("foodItems", availableItems);
         model.addAttribute("currentPage", 1);
         return "food_listing";
@@ -66,7 +63,7 @@ public class FoodController {
     @PostMapping("/save")
     public String saveFoodItem(@ModelAttribute FoodItem foodItem,
                                @RequestParam(value = "foodImage", required = false) MultipartFile file,
-                               RedirectAttributes redirectAttributes) {
+                               RedirectAttributes redirectAttributes) throws IOException {
 
         // Handle image upload if present
         if (file != null && !file.isEmpty()) {
@@ -85,23 +82,25 @@ public class FoodController {
                     return "redirect:/foodshare/food-posting";
                 }
 
-                // Generate unique filename
-                String originalFilename = file.getOriginalFilename();
-                String fileExtension = originalFilename != null ?
-                        originalFilename.substring(originalFilename.lastIndexOf(".")) : "";
-                String fileName = UUID.randomUUID().toString() + fileExtension;
-
                 // Save file to uploads directory
                 Path uploadPath = Paths.get("uploads");
                 if (!Files.exists(uploadPath)) {
                     Files.createDirectories(uploadPath);
                 }
 
+                // Set image path on food item
+                String originalFilename = file.getOriginalFilename();
+                String fileExtension = originalFilename != null ?
+                        originalFilename.substring(originalFilename.lastIndexOf(".")) : "";
+                String fileName = UUID.randomUUID().toString() + fileExtension;
+
                 Files.copy(file.getInputStream(), uploadPath.resolve(fileName),
                         StandardCopyOption.REPLACE_EXISTING);
-
-                // Set image path on food item
                 foodItem.setImageUrl("/uploads/" + fileName);
+
+                // Set image data (byte array) on food item
+                foodItem.setImageData(file.getBytes());
+                foodItem.setImageType(contentType);
 
             } catch (IOException e) {
                 redirectAttributes.addFlashAttribute("error", "Failed to upload image");
@@ -109,42 +108,38 @@ public class FoodController {
             }
         }
 
-        // Save the food item (existing logic)
-        foodItemService.save(foodItem);
+        // Save using MongoDB repository
+        foodItemRepository.save(foodItem);
         redirectAttributes.addFlashAttribute("success", "Food posted successfully!");
 
-        return "redirect:/foodshare/food-listing";
+        return "redirect:/foodshare/food-listing"; // redirect to food listing page(302確認済み)
     }
 
-    @GetMapping("/register")
-    public String register(Model model) {
-        return "register";
-    }
-
-    @GetMapping("/sign-in")
-    public String login(Model model) {
-        return "sign_in";
-    }
-
-    @GetMapping("/admin-dashboard")
-    public String adminBoard(Model model) {
-        return "admin_dashboard";
-    }
+//    @GetMapping("/admin-dashboard")
+//    public String adminBoard(Model model) {
+//        return "admin_dashboard";
+//    }
 
     @GetMapping("/terms")
     public String terms(Model model) {
         return "terms";
     }
 
+    @GetMapping("/policy")
+    public String policy(Model model) {
+        return "policy";
+    }
+
     @PostMapping("/want-food")
     public String wantFoodItem(@RequestParam String id,
                                Model model,
                                HttpSession session) {
-        FoodItem foodItem = foodItemService.findById(id);
+        FoodItem foodItem = foodItemRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid food item id: " + id));
 
-        // update item condition. set wanted to true
+        // update item condition
         foodItem.setWanted(true);
-        foodItemService.save(foodItem); // save to MongoDB
+        foodItemRepository.save(foodItem);
 
         // add wantedItems
         List<FoodItem> wantedItems = (List<FoodItem>) session.getAttribute("wantedItems");
