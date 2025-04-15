@@ -7,6 +7,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -25,7 +26,8 @@ public class UserService {
     public int saveUser(User user) {
         System.out.println("Attempting to save user: " + user);
         // check exit user
-        if (userRepository.findByEmail(user.getEmail()) != null) {
+        Optional<User> existingUser = userRepository.findByEmail(user.getEmail());
+        if (existingUser.isPresent()) {
             System.out.println("User already exists in database: " + user.getEmail());
             return 0; // already user
         }
@@ -52,18 +54,19 @@ public class UserService {
 
     //delete user by id for admin
     public void deleteUserByEmail(String email) {
-        User user = userRepository.findByEmail(email);
-        if (user != null) {
-            userRepository.delete(user);
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+        if (optionalUser.isPresent()) {
+            userRepository.delete(optionalUser.get());
         } else {
             throw new IllegalArgumentException("No user found with email: " + email);
         }
     }
 
-    // freeze user by id for admin
+    // freeze user by email for admin
     public void freezeUserByEmail(String email) {
-        User user = userRepository.findByEmail(email);
-        if (user != null) {
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
             user.setActive(false);
             userRepository.save(user);
         } else {
