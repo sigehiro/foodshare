@@ -83,15 +83,26 @@ public class FoodController {
 
     // Using FoodItemService to get paginated results in MongoDB
     @GetMapping("/food-listing")
-    public String foodListing(Model model, @RequestParam(defaultValue = "1") int page) {
+    public String foodListing(Model model,
+                              @RequestParam(defaultValue = "1") int page,
+                              @RequestParam(required = false) String sortDir) {
         int pageSize = 12; // page size set 12
         // Get food items from the service
-        Map<String, Object> result = foodItemService.findAll(page, pageSize);
+        Map<String, Object> result;
+
+        if (sortDir == null || (!sortDir.equalsIgnoreCase("asc") && !sortDir.equalsIgnoreCase("desc"))) {
+            // default: no sort
+            result = foodItemService.findAll(page, pageSize, null);
+            sortDir = null; // Don't delete 明示的にnull保持
+        } else {
+            result = foodItemService.findAll(page, pageSize, sortDir);
+        }
 
         model.addAttribute("foodItems", result.get("foodItems"));
         model.addAttribute("currentPage", result.get("currentPage"));
         model.addAttribute("totalPages", result.get("totalPages"));
         model.addAttribute("totalItems", result.get("totalItems"));
+        model.addAttribute("sortDir", sortDir);
 
         return "food_listing";
     }

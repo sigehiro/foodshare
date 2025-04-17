@@ -201,7 +201,7 @@
                   class="text-muted">None
               </span>
           </td>
-          <td th:text="${item.pickupTime}"></td>
+          <td th:text="${#temporals.format(item.pickupTime, 'yyyy-MM-dd HH:mm')}"></td>
           <td th:text="${item.location}"></td>
         </tr>
         </tbody>
