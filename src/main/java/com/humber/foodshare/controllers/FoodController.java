@@ -6,6 +6,7 @@ import com.humber.foodshare.repositories.FoodItemRepository;
 import com.humber.foodshare.repositories.UserRepository;
 import com.humber.foodshare.services.FoodItemService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,6 +15,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.http.MediaType;
+
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -83,15 +86,26 @@ public class FoodController {
 
     // Using FoodItemService to get paginated results in MongoDB
     @GetMapping("/food-listing")
-    public String foodListing(Model model, @RequestParam(defaultValue = "1") int page) {
+    public String foodListing(Model model,
+                              @RequestParam(defaultValue = "1") int page,
+                              @RequestParam(required = false) String sortDir) {
         int pageSize = 12; // page size set 12
         // Get food items from the service
-        Map<String, Object> result = foodItemService.findAll(page, pageSize);
+        Map<String, Object> result;
+
+        if (sortDir == null || (!sortDir.equalsIgnoreCase("asc") && !sortDir.equalsIgnoreCase("desc"))) {
+            // default: no sort
+            result = foodItemService.findAll(page, pageSize, null);
+            sortDir = null; // Don't delete 明示的にnull保持
+        } else {
+            result = foodItemService.findAll(page, pageSize, sortDir);
+        }
 
         model.addAttribute("foodItems", result.get("foodItems"));
         model.addAttribute("currentPage", result.get("currentPage"));
         model.addAttribute("totalPages", result.get("totalPages"));
         model.addAttribute("totalItems", result.get("totalItems"));
+        model.addAttribute("sortDir", sortDir);
 
         return "food_listing";
     }
@@ -109,7 +123,7 @@ public class FoodController {
 
         // Handle image upload if present
         if (file != null && !file.isEmpty()) {
-            try {
+//            try {
                 // Validate file type
                 String contentType = file.getContentType();
                 if (contentType == null ||
@@ -126,37 +140,59 @@ public class FoodController {
 
                 // Save file to uploads directory
                 // Path uploadPath = Paths.get("uploads");
-                String projectDirectory = System.getProperty("user.dir");
-                Path uploadPath = Paths.get(projectDirectory, "src", "main", "resources", "static", "uploads");
-                if (!Files.exists(uploadPath)) {
-                    Files.createDirectories(uploadPath);
-                }
+//                String projectDirectory = System.getProperty("user.dir");
+//                Path uploadPath = Paths.get(projectDirectory, "src", "main", "resources", "static", "uploads");
+//                if (!Files.exists(uploadPath)) {
+//                    Files.createDirectories(uploadPath);
+//                }
+//
+//                // Set image path on food item
+//                String originalFilename = file.getOriginalFilename();
+//                String fileExtension = originalFilename != null ?
+//                        originalFilename.substring(originalFilename.lastIndexOf(".")) : "";
+//                String fileName = UUID.randomUUID().toString() + fileExtension;
+//
+//                Files.copy(file.getInputStream(), uploadPath.resolve(fileName),
+//                        StandardCopyOption.REPLACE_EXISTING);
+//                foodItem.setImageUrl("/uploads/" + fileName);
+//
+//                // Set image data (byte array) on food item
+//                foodItem.setImageData(file.getBytes());
+//                foodItem.setImageType(contentType);
+//
+//            } catch (IOException e) {
+//                redirectAttributes.addFlashAttribute("error", "Failed to upload image");
+//                return "redirect:/foodshare/food-posting";
+//            }
 
-                // Set image path on food item
-                String originalFilename = file.getOriginalFilename();
-                String fileExtension = originalFilename != null ?
-                        originalFilename.substring(originalFilename.lastIndexOf(".")) : "";
-                String fileName = UUID.randomUUID().toString() + fileExtension;
 
-                Files.copy(file.getInputStream(), uploadPath.resolve(fileName),
-                        StandardCopyOption.REPLACE_EXISTING);
-                foodItem.setImageUrl("/uploads/" + fileName);
-
-                // Set image data (byte array) on food item
+                // ローカル保存は行わず、MongoDBのみに保存
                 foodItem.setImageData(file.getBytes());
                 foodItem.setImageType(contentType);
 
-            } catch (IOException e) {
-                redirectAttributes.addFlashAttribute("error", "Failed to upload image");
-                return "redirect:/foodshare/food-posting";
+                // imageUrlはnullにする
+                foodItem.setImageUrl(null);
             }
-        }
+
 
         // Save using MongoDB repository
         foodItemRepository.save(foodItem);
         redirectAttributes.addFlashAttribute("success", "Food posted successfully!");
 
         return "redirect:/foodshare/food-listing"; // redirect to food listing page(302確認済み)
+    }
+
+
+    // 画像取得用エンドポイント（GET）
+    @GetMapping("/image/{id}")
+    public ResponseEntity<byte[]> getImage(@PathVariable String id) {
+        FoodItem item = foodItemRepository.findById(id).orElse(null);
+        if (item == null || item.getImageData() == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(item.getImageType()))
+                .body(item.getImageData());
     }
 
     @GetMapping("/terms")

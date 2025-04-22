@@ -146,6 +146,30 @@
       color: white;
     }
 
+    .sort-btn {
+      background-color: transparent;
+      color: var(--primary-green);
+      border: 2px solid var(--primary-green);
+      transition: background-color 0.3s, color 0.3s;
+
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      display: inline-block;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .sort-btn:hover {
+      background-color: var(--primary-green);
+      color: white;
+    }
+
+    .sort-btn.active {
+      background-color: var(--primary-green);
+      color: white;
+    }
+
+
     .empty-state {
       padding: 3rem;
       text-align: center;
@@ -178,8 +202,9 @@
     <h1 class="page-header">Available Food Listings</h1>
 
     <!-- Search and Filter Section -->
-<!--    <div class="search-filter">-->
-<!--      <div class="row g-3">-->
+    <div class="search-filter">
+      <div class="row g-3">
+<!--        #TODO Don't delete  no hurry-->
 <!--        <div class="col-md-9">-->
 <!--          <input type="text" class="form-control" placeholder="Search by food type...">-->
 <!--        </div>-->
@@ -196,8 +221,29 @@
 <!--            Apply Filters-->
 <!--          </button>-->
 <!--        </div>-->
-<!--      </div>-->
-<!--    </div>-->
+        <div class="col-md-9">
+          <h3>Pickup Time</h3>
+        </div>
+        <div class="col-md-9 d-flex justify-content-start gap-3">
+          <a th:href="@{|/foodshare/food-listing?page=${currentPage}&sortDir=asc|}"
+             th:classappend="${sortDir == 'asc'} ? 'active' : ''"
+             class="sort-btn">
+            Earliest First
+          </a>
+          <a th:href="@{|/foodshare/food-listing?page=${currentPage}&sortDir=desc|}"
+             th:classappend="${sortDir == 'desc'} ? 'active' : ''"
+             class="sort-btn">
+            Latest First
+          </a>
+          <a th:href="@{|/foodshare/food-listing?page=${currentPage}|}"
+             th:classappend="${sortDir == null} ? ' active' : ''"
+             class="sort-btn">
+            Reset
+          </a>
+        </div>
+
+      </div>
+    </div>
 
     <!-- Food Listings Grid -->
     <div th:if="${foodItems != null and !foodItems.empty}" class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-4">
@@ -206,12 +252,12 @@
           <!-- Image Container - Updated for both storage approaches -->
           <div class="food-image-container">
             <!-- Option 1: If using external file storage (imageUrl) -->
-            <th:block th:if="${item.imageUrl != null}">
-              <img th:src="@{${item.imageUrl}}" alt="Food image" class="food-image">
-            </th:block>
+<!--            <th:block th:if="${item.imageUrl != null}">-->
+<!--              <img th:src="@{${item.imageUrl}}" alt="Food image" class="food-image">-->
+<!--            </th:block>-->
 
             <!-- Option 2: If storing binary data directly in MongoDB -->
-            <th:block th:if="${item.imageData != null and item.imageUrl == null}">
+            <th:block th:if="${item.imageData != null}">
               <img th:src="@{'/foodshare/image/' + ${item.id}}" alt="Food image" class="food-image">
             </th:block>
 
@@ -247,7 +293,7 @@
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                 <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/>
               </svg>
-              <span th:text="${item.pickupTime}"></span>
+              <span th:text="${#temporals.format(item.pickupTime, 'yyyy-MM-dd HH:mm')}"></span>
             </div>
 
             <div th:if="${item.allergenInfo}" class="mt-2">
@@ -279,16 +325,16 @@
     <nav th:if="${totalPages > 1}" aria-label="Page navigation">
       <ul class="pagination">
         <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
-          <a class="page-link" th:href="@{/foodshare/food-listing(page=${currentPage - 1})}" aria-label="Previous">
+          <a class="page-link" th:href="@{/foodshare/food-listing(page=${currentPage - 1}, sortDir=${sortDir})}" aria-label="Previous">
             <span aria-hidden="true">&laquo;</span>
           </a>
         </li>
         <li th:each="page : ${#numbers.sequence(1, totalPages)}"
             class="page-item" th:classappend="${page == currentPage} ? 'active'">
-          <a class="page-link" th:href="@{/foodshare/food-listing(page=${page})}" th:text="${page}"></a>
+          <a class="page-link" th:href="@{/foodshare/food-listing(page=${page}, sortDir=${sortDir})}" th:text="${page}"></a>
         </li>
         <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled'">
-          <a class="page-link" th:href="@{/foodshare/food-listing(page=${currentPage + 1})}" aria-label="Next">
+          <a class="page-link" th:href="@{/foodshare/food-listing(page=${currentPage + 1}, sortDir=${sortDir})}" aria-label="Next">
             <span aria-hidden="true">&raquo;</span>
           </a>
         </li>

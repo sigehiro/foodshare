@@ -5,6 +5,7 @@ import com.humber.foodshare.repositories.FoodItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -25,10 +26,18 @@ public class FoodItemService {
     }
 
     // Using MongoDB for pagination
-    public Map<String, Object> findAll(int pageNo, int pageSize) {
-        // Validate page number and size
-        Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
-        // MongoDB用のメソッド
+    public Map<String, Object> findAll(int pageNo, int pageSize,  String sortDir) {
+        Pageable pageable;
+
+        if (sortDir == null || (!sortDir.equalsIgnoreCase("asc") && !sortDir.equalsIgnoreCase("desc"))) {
+            // default
+            pageable = PageRequest.of(pageNo - 1, pageSize);
+        } else {
+            Sort sort = Sort.by("pickupTime");
+            sort = sortDir.equalsIgnoreCase("desc") ? sort.descending() : sort.ascending();
+            pageable = PageRequest.of(pageNo - 1, pageSize, sort);
+        }
+
         List<FoodItem> foodItems = foodItemRepository.findAll(pageable).getContent();
 
         long totalItems = foodItemRepository.count();

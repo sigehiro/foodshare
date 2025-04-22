@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDateTime;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,7 +21,7 @@ public class FoodItem {
     private String foodType;
     private int quantity;
     private String allergenInfo;
-    private String pickupTime;
+    private LocalDateTime pickupTime;
     private String location;
     private boolean isWanted;
     private String imageUrl; // New field for image storage
