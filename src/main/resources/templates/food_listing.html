@@ -252,12 +252,12 @@
           <!-- Image Container - Updated for both storage approaches -->
           <div class="food-image-container">
             <!-- Option 1: If using external file storage (imageUrl) -->
-            <th:block th:if="${item.imageUrl != null}">
-              <img th:src="@{${item.imageUrl}}" alt="Food image" class="food-image">
-            </th:block>
+<!--            <th:block th:if="${item.imageUrl != null}">-->
+<!--              <img th:src="@{${item.imageUrl}}" alt="Food image" class="food-image">-->
+<!--            </th:block>-->
 
             <!-- Option 2: If storing binary data directly in MongoDB -->
-            <th:block th:if="${item.imageData != null and item.imageUrl == null}">
+            <th:block th:if="${item.imageData != null}">
               <img th:src="@{'/foodshare/image/' + ${item.id}}" alt="Food image" class="food-image">
             </th:block>
 
