@@ -121,6 +121,33 @@
       </table>
     </div>
   </div>
+  <hr>
+  <!--message window for admin to respond to user messages shows only when messages are present -->
+  <h3>User Chat Messages</h3>
+
+  <div th:if="${messages.isEmpty()}">
+    <p>No messages yet.</p>
+  </div>
+
+  <div th:each="msg : ${messages}">
+    <div style="margin-bottom: 15px;">
+      <strong th:text="${msg.sender}">Sender</strong>:
+      <span th:text="${msg.content}"></span> <br/>
+      <em th:text="${#temporals.format(msg.timestamp, 'yyyy-MM-dd HH:mm')}"></em> <br/>
+
+      <div th:if="${msg.reply}">
+        <strong>Admin Reply:</strong> <span th:text="${msg.reply}"></span>
+      </div>
+
+      <form th:action="@{/foodshare/admin/reply}" method="post" style="margin-top: 5px;">
+        <input type="hidden" name="messageId" th:value="${msg.id}" />
+        <input type="text" name="reply" placeholder="Write a reply..." class="form-control" />
+        <button type="submit" class="btn btn-sm btn-primary">Reply</button>
+      </form>
+    </div>
+  </div>
+
+
   <footer th:include="@{fragments/footer.html}"></footer>
 </div>
 

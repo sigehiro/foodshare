@@ -301,7 +301,15 @@
     <div class="chat-button" onclick="toggleChat()">
         <img src="/images/Wchatbox.png" alt="Chat" style="width: 40px; height: 40px;" />
     </div>
-    <!-- Chat Box -->
+           <!--hidden input fields to properly store username and email as id for message response -->
+        <div th:if="${#authorization.expression('isAuthenticated()')}">
+            <input type="hidden" id="chatUsername" th:value="${user.username}" />
+            <input type="hidden" id="chatEmail" th:value="${user.email}" />
+        </div>
+
+
+
+        <!-- Chat Box -->
     <div class="chat-box" id="chatBox">
         <div class="chat-header">Chat with Us</div>
         <div class="chat-body" id="chatBody">
@@ -329,16 +337,49 @@
     function sendMessage() {
         const input = document.getElementById('chatInput');
         const message = input.value.trim();
+
+        const username = document.getElementById('chatUsername')?.value;
+        const email = document.getElementById('chatEmail')?.value;
+
         if (message) {
             const chatBody = document.getElementById('chatBody');
             const msgElement = document.createElement('p');
             msgElement.textContent = "You: " + message;
             chatBody.appendChild(msgElement);
-            input.value = "";
             chatBody.scrollTop = chatBody.scrollHeight;
+
+            // Send message to backend
+            fetch('/api/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    sender: 'user',
+                    content: message,
+                    username: username,
+                    email: email
+                })
+            })
+                .then(res => {
+                    if (!res.ok) {
+                        throw new Error("Server error: " + res.status);
+                    }
+                    return res.json();
+                })
+                .then(data => {
+                    console.log(" Message saved to DB:", data);
+                })
+                .catch(error => {
+                    console.error(" Failed to send message:", error);
+                    alert("Message failed to send. Check console for details.");
+                });
+
+            input.value = "";
         }
     }
-    </script>
+
+</script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -39,8 +39,25 @@ public class FoodController {
 
     @GetMapping("/home")
     public String home(Model model) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = null;
+
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            email = userDetails.getUsername(); // usually your user's email
+        } else if (authentication != null) {
+            email = authentication.getName();
+        }
+
+        if (email != null) {
+            Optional<User> optionalUser = userRepository.findByEmail(email);
+            optionalUser.ifPresent(user -> model.addAttribute("user", user));
+        }
         model.addAttribute("message", "Welcome to FoodShare");
         return "home";
+
+
     }
 
     @GetMapping("/user-dashboard")

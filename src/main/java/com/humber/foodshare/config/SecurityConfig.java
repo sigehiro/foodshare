@@ -26,11 +26,13 @@ public class SecurityConfig {
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers(
+                                        "/", // added
                                         "/foodshare/home",
                                         "/foodshare/terms",
                                         "/foodshare/policy",
                                         "/register/**",
-                                        "/login/**"
+                                        "/login/**",
+                                        "/api/chat" // added for chat POST
                                         ).permitAll()
                         .requestMatchers("/css/**",
                                         "/js/**",
@@ -82,3 +84,5 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 }
+
+
